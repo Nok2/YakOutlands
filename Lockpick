@@ -1,0 +1,9 @@
+if buffexists 'Arcane Empowerment'
+  usetype '0xe80'
+  waitforgump 0x2bdf0cb6 15000
+  replygump 0x2bdf0cb6 4
+  waitforgump 0x2bdf0cb6 15000
+  waitforgump 0x2bdf0cb6 15000
+else
+  playmacro 'Bonus'
+endif
