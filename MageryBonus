@@ -1,0 +1,122 @@
+if not buffexists 'Arcane Empowerment'
+  //anchor is here, we are at the bank
+  if @inrange 'anchor' 30
+    //grab regs before beginning
+    msg 'bank'
+    //get  spidersilk
+    if @movetype 0xf8d 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0xf8d 'restock' 'backpack' 0 0 0 'any' 15
+      pause 1500
+    else
+      sysmsg 'Out of regs!' 25
+      @canceltarget
+      stop
+    endif
+    //restock moss, pearl, and root (recall regs)
+    //pearl
+    if @movetype 0xf7a 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0xf7a 'restock' 'backpack' 0 0 0 'any' 15
+      pause 1500
+    else
+      sysmsg 'Out of regs!' 25
+      @canceltarget
+      stop
+    endif
+    //get  ash
+    if @movetype 0xf8c 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0xf8c 'restock' 'backpack' 0 0 0 'any' 20
+      pause 1500
+    else
+      sysmsg 'Out of regs!' 25
+      @canceltarget
+      stop
+    endif
+    //moss
+    if @movetype 0xf7b 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0xf7b 'restock' 'backpack' 0 0 0 'any' 15
+      pause 1500
+    else
+      sysmsg 'Out of regs!' 25
+      @canceltarget
+      stop
+    endif
+    //root
+    if @movetype 0xf86 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0xf86 'restock' 'backpack' 0 0 0 'any' 20
+      pause 1500
+    else
+      sysmsg 'Out of regs!' 25
+      @canceltarget
+      stop
+    endif
+    //stocked up on regs, time to go kill something
+    @clearjournal
+    pause 1000
+    cast "Recall"
+    waitfortarget 3500
+    target! 'birdRune'
+    pause 1000
+  endif
+  //anchor isn't here, assume in bird spot already
+  if not @inrange 'anchor' 30
+    //find enemy to kill and reset timer
+    @unsetalias 'toBeKilled'
+    getenemy grey next
+    @setalias 'toBeKilled' 'enemy'
+    if @findalias 'toBeKilled' 'any' 'ground' 'any' 16
+      sysmsg 'New target found'
+    endif
+    if not @inrange 'toBeKilled' 16
+      sysmsg 'Nothing to kill, waiting and retry'
+      pause 5000
+      replay
+    endif
+    while @inrange 'toBeKilled' 16
+      //if root is less than 3, go back to restock
+      if @counttype 0xf86 'any' 'backpack' < 3
+        @clearjournal
+        pause 1000
+        //meditate if less than 12 mana
+        while mana < 12
+          useskill 'meditation'
+          pause 2000
+        endwhile
+        cast "Recall"
+        waitfortarget 3500
+        target! 'bankRune'
+        pause 1000
+        replay
+      endif
+      //attack and kill the target
+      attack 'toBeKilled'
+      pause 600
+      cast 'lightning'
+      pause 2000
+      target 'toBeKilled'
+      pause 2000
+    endwhile
+    //meditate if less than 12 mana, go back to bank
+    while mana < 12
+      useskill 'meditation'
+      pause 2000
+    endwhile
+    cast "Recall"
+    waitfortarget 3500
+    target! 'bankRune'
+    pause 1000
+    msg 'bank'
+    pause 1000
+  endif
+endif
+//Insert macro here
+playmacro 'Lockpick'
