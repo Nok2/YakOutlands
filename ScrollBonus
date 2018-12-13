@@ -1,0 +1,50 @@
+// This macro is to get bonus with using Scrolls and not recall. Kills birds with Weapon skill
+if not buffexists 'Arcane Empowerment'
+  //anchor is here, we are at the bank
+  if @inrange 'anchor' 30
+    //stocked up on regs, time to go kill something
+    if @inrange 'anchor' 30
+    //grab scrolls before going
+    msg 'bank'
+    //get  scrolls
+    if @movetype 0x1f4c 'backpack' 'restock' 0 0 0 'any'
+      pause 1500
+    endif
+    if @movetype 0x1f4c 'restock' 'backpack' 0 0 0 'any' 10
+      pause 1500
+    else
+      sysmsg 'Out of scrolls!' 25
+      @canceltarget
+      stop
+    endif
+    @clearjournal
+    pause 1000
+    usetype '0x1f4c'
+    waitfortarget 3500
+    target! 'bonus'
+  endif
+  //anchor isn't here, assume in bird spot already
+  if not @inrange 'anchor' 30
+    //find enemy to kill and reset timer
+    @unsetalias 'toBeKilled'
+    getenemy grey next
+    @setalias 'toBeKilled' 'enemy'
+    if @findalias 'toBeKilled' 'any' 'ground' 'any' 8
+      sysmsg 'New target found'
+    endif
+    if not @inrange 'toBeKilled' 8
+      sysmsg 'Nothing to kill, waiting and retry'
+      pause 5000
+      replay
+    endif
+    while @inrange 'toBeKilled' 8
+      attack 'toBeKilled'
+      pause 3000
+    endwhile
+    usetype '0x1f4c'
+    waitfortarget 3500
+    target! 'bankrune'
+    pause 1000
+  endif
+endif
+playmacro 'Lockpick'
