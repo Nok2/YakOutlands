@@ -30,7 +30,7 @@ if not buffexists 'Arcane Empowerment'
     if @movetype 0xf8c 'backpack' 'restock' 0 0 0 'any'
       pause 1500
     endif
-    if @movetype 0xf8c 'restock' 'backpack' 0 0 0 'any' 20
+    if @movetype 0xf8c 'restock' 'backpack' 0 0 0 'any' 15
       pause 1500
     else
       sysmsg 'Out of regs!' 25
